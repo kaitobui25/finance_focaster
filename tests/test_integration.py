@@ -23,11 +23,20 @@ def test_config():
     """Provides configuration for testing, using the real DB."""
     # We use the actual dev database for integration testing
     # In a real CI environment, this would be a dedicated test DB
-    os.environ.setdefault("DATABASE_URL", "postgresql://forecaster:1111@localhost:5432/finance_forecaster")
-    os.environ.setdefault("GEMINI_API_KEY", "test_gemini_key")
-    os.environ.setdefault("TELEGRAM_BOT_TOKEN", "test_bot_token")
-    os.environ.setdefault("TELEGRAM_CHAT_ID", "12345")
-    os.environ.setdefault("FEEDS_CONFIG_PATH", "config/feeds.yaml")
+    
+    # Check if we're in GH Actions (which provides DATABASE_URL with testpass)
+    # If not, use the local dev database URL
+    db_url = os.environ.get(
+        "DATABASE_URL", 
+        "postgresql://forecaster:1111@localhost:5432/finance_forecaster"
+    )
+    
+    os.environ["DATABASE_URL"] = db_url
+    os.environ["GEMINI_API_KEY"] = os.environ.get("GEMINI_API_KEY", "test_gemini_key")
+    os.environ["TELEGRAM_BOT_TOKEN"] = os.environ.get("TELEGRAM_BOT_TOKEN", "test_bot_token")
+    os.environ["TELEGRAM_CHAT_ID"] = os.environ.get("TELEGRAM_CHAT_ID", "12345")
+    os.environ["FEEDS_CONFIG_PATH"] = os.environ.get("FEEDS_CONFIG_PATH", "config/feeds.yaml")
+    
     return AppConfig.from_env()
 
 
