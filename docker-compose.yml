@@ -22,7 +22,7 @@ services:
 
   # ── Finance Forecaster App ────────────────────────────
   app:
-    build: .
+    image: kaitobui25/finance_forecaster:latest
     restart: unless-stopped
     depends_on:
       db:

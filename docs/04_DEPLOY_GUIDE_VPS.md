@@ -13,7 +13,20 @@ Tài liệu này hướng dẫn cách deploy ứng dụng Finance Forecaster lê
 ## Bước 1: Chuẩn bị VPS
 SSH vào VPS của bạn:
 ```bash
-ssh user@your_vps_ip
+ssh -i "C:\đường_dẫn_tới_thư_mục_chứa_file\ssh-key-2026-03-01.key" ubuntu@138.2.50.98
+```
+
+Cục lệnh này sẽ cài Docker và tạo 2GB RAM ảo cùng lúc giúp VPS không bao giờ bị sập
+```bash
+sudo apt update && sudo apt install docker.io docker-compose git -y
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker $USER
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
 Tạo một thư mục cho dự án:
@@ -30,32 +43,44 @@ Bạn chỉ cần 3 file trên VPS để khởi chạy (không cần mang toàn 
 
 **Lấy file `docker-compose.yml` và thư mục `db` từ repo:**
 ```bash
-wget https://raw.githubusercontent.com/Kaitobui/finance_forecaster/main/docker-compose.yml
+wget https://raw.githubusercontent.com/kaitobui25/finance_focaster/main/docker-compose.yml
 mkdir -p db
-wget -O db/init.sql https://raw.githubusercontent.com/Kaitobui/finance_forecaster/main/db/init.sql
+wget -O db/init.sql https://raw.githubusercontent.com/kaitobui25/finance_focaster/main/db/init.sql
 ```
 
 **Tạo file `.env` chứa Secret Keys:**
 ```bash
 nano .env
 ```
-Copy nội dung sau vào và điền thông tin thật của bạn:
-```env
-# Mật khẩu DB (thay đổi thành mật khẩu an toàn)
-POSTGRES_PASSWORD=your_secure_db_password
+Màn hình editor sẽ mở ra.
 
-# Gemini & Telegram Secrets
-GEMINI_API_KEY=your_gemini_api_key_here
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
-TELEGRAM_CHAT_ID=your_telegram_chat_id_here
+📌 Dán nội dung này vào:
+```bash
+POSTGRES_PASSWORD=StrongPassword123!
 
-# Config
+GEMINI_API_KEY=xxxxxxxxxxxxxxxx
+TELEGRAM_BOT_TOKEN=xxxxxxxxxxxxxxxx
+TELEGRAM_CHAT_ID=xxxxxxxx
+
 CRAWL_INTERVAL_HOURS=2
 MORNING_REPORT_TIME=07:45
 EVENING_REPORT_TIME=16:30
 TIMEZONE=Asia/Tokyo
 LOG_LEVEL=INFO
 ```
+💾 Lưu file trong nano
+
+Nhấn:
+
+Ctrl + O
+
+→ Enter
+
+Nhấn:
+
+Ctrl + X
+
+Thoát nano.
 
 ## Bước 3: Khởi chạy Ứng dụng
 Kéo image mới nhất (nếu cấu hình download image từ container registry như GitHub Packages / Docker Hub) hoặc cho Docker Compose tự động build lại ứng dụng (do `docker-compose.yml` có cấu hình `build: .` — yêu cầu có source code).
@@ -64,7 +89,7 @@ Kéo image mới nhất (nếu cấu hình download image từ container registr
 
 ```bash
 # Clone source code
-git clone https://github.com/Kaitobui/finance_forecaster.git .
+git clone https://github.com/kaitobui25/finance_focaster.git .
 
 # Tạo file .env như Bước 2 ở trên
 nano .env 
