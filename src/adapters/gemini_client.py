@@ -38,7 +38,7 @@ Article content: {content}
 
 Keywords:"""
 
-DIGEST_PROMPT = """You are Antigravity, an AI agent specializing in Japanese financial market analysis.
+DIGEST_PROMPT = """You are KAI-FINA, an AI agent specializing in Japanese financial market analysis.
 Create a concise daily news digest from the following articles.
 
 Group the news by theme (e.g., Japan Market, Global Markets, Geopolitics, Central Banks).

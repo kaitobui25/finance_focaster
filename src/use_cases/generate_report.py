@@ -106,12 +106,12 @@ class GenerateReportUseCase:
 
         if report_type == "morning":
             return (
-                f"🌅 ANTIGRAVITY | Pre-Market Brief\n"
+                f"🌅 KAI-FINA | Pre-Market Brief\n"
                 f"📅 {date_str} | ⏰ {time_str}\n"
                 f"{'━' * 35}"
             )
         return (
-            f"🌙 ANTIGRAVITY | End-of-Day Report\n"
+            f"🌙 KAI-FINA | End-of-Day Report\n"
             f"📅 {date_str} | Phiên giao dịch Tokyo đã đóng cửa\n"
             f"{'━' * 35}"
         )
