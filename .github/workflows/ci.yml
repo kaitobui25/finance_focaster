@@ -59,7 +59,7 @@ jobs:
       - name: Tag and Push Image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          docker tag finance-forecaster:${{ github.sha }} kaitobui25/finance_forecaster:latest
-          docker tag finance-forecaster:${{ github.sha }} kaitobui25/finance_forecaster:${{ github.sha }}
-          docker push kaitobui25/finance_forecaster:latest
-          docker push kaitobui25/finance_forecaster:${{ github.sha }}
+          docker tag finance-forecaster:${{ github.sha }} kaitobui/finance_forecaster:latest
+          docker tag finance-forecaster:${{ github.sha }} kaitobui/finance_forecaster:${{ github.sha }}
+          docker push kaitobui/finance_forecaster:latest
+          docker push kaitobui/finance_forecaster:${{ github.sha }}
