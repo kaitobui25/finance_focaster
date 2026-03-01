@@ -26,6 +26,10 @@ finance_forecaster/
 ├── db/                     # Database schemas and documentation
 │   ├── init.sql            # PostgreSQL 10-table DDL and seed data
 │   └── README.md           # Database tables explained
+├── docker/                 # Docker configurations
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   └── .dockerignore
 ├── docs/                   # Architectural instructions and agent rules
 ├── src/                    # Core application source code
 │   ├── adapters/           # External API & DB implementations (PostgreSQL, Gemini, RSS)
@@ -96,5 +100,5 @@ The system follows **Clean Architecture**, aggressively separating business logi
 
 ## Roadmap & Next Steps
 - Implement full Telegram notification integration.
-- Finalize Dockerization (`Dockerfile`, `docker-compose.yml`) for seamless deployment.
+- Finalize Dockerization (`docker/Dockerfile`, `docker/docker-compose.yml`) for seamless deployment.
 - Integrate automated end-to-end testing with `pytest`.

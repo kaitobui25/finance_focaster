@@ -45,8 +45,11 @@ finance_forecaster/
 ├── db/                            # Database migrations
 │   └── init.sql
 │
-├── docker-compose.yml
-├── Dockerfile
+├── docker/                        # Cấu hình Docker
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   └── .dockerignore
+│
 ├── requirements.txt
 ├── feeds.yaml                     # RSS feeds config (dễ thêm/bớt)
 ├── .env.example

@@ -37,13 +37,14 @@ cd ~/finance_forecaster
 
 ## Bước 2: Chuẩn bị file cấu hình
 Bạn chỉ cần 3 file trên VPS để khởi chạy (không cần mang toàn bộ source code lên):
-1. `docker-compose.yml`
+1. `docker/docker-compose.yml`
 2. `.env`
 3. `db/init.sql`
 
-**Lấy file `docker-compose.yml` và thư mục `db` từ repo:**
+**Lấy file `docker/docker-compose.yml` và thư mục `db` từ repo:**
 ```bash
-wget https://raw.githubusercontent.com/kaitobui25/finance_focaster/main/docker-compose.yml
+mkdir -p docker
+wget -O docker/docker-compose.yml https://raw.githubusercontent.com/kaitobui25/finance_focaster/main/docker/docker-compose.yml
 mkdir -p db
 wget -O db/init.sql https://raw.githubusercontent.com/kaitobui25/finance_focaster/main/db/init.sql
 ```
@@ -85,7 +86,7 @@ Thoát nano.
 ## Bước 3: Khởi chạy Ứng dụng
 Kéo image mới nhất (nếu cấu hình download image từ container registry như GitHub Packages / Docker Hub) hoặc cho Docker Compose tự động build lại ứng dụng (do `docker-compose.yml` có cấu hình `build: .` — yêu cầu có source code).
 
-**Lưu ý:** Vì trong file `docker-compose.yml` hiện tại đang để `build: .`, nên cần clone toàn bộ repo dể chạy bằng tay nếu bạn không dùng Docker container registry (như Docker Hub):
+**Lưu ý:** Chạy bằng tay nếu bạn không dùng Docker container registry (như Docker Hub):
 
 ```bash
 # Clone source code
@@ -95,17 +96,17 @@ git clone https://github.com/kaitobui25/finance_focaster.git .
 nano .env 
 
 # Chạy Docker Compose dưới nền
-docker-compose up -d --build
+docker-compose -f docker/docker-compose.yml up -d
 ```
 
 ## Bước 4: Kiểm tra trạng thái
 Kiểm tra xem các containers đã chạy thành công chưa:
 ```bash
-docker-compose ps
+docker-compose -f docker/docker-compose.yml ps
 ```
 Hiển thị log của ứng dụng xem có lỗi gì không:
 ```bash
-docker-compose logs -f app
+docker-compose -f docker/docker-compose.yml logs -f app
 ```
 
 ## Cách Update Ứng dụng sau này
@@ -113,6 +114,6 @@ Mỗi lần code mới được đưa lên `main`, GitHub Actions sẽ chạy te
 ```bash
 cd ~/finance_forecaster
 git pull origin main
-docker-compose up -d --build app
+docker-compose -f docker/docker-compose.yml up -d app
 ```
 *(Việc này không ảnh hưởng đến dữ liệu Database vì Database đã được lưu vào Docker volume `pgdata`)*.
