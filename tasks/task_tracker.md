@@ -38,10 +38,10 @@
 - [x] Implement console fallback sender
 - [x] Setup Telegram Bot (@kai_fina_bot — verified 2026-03-01)
 - [x] Implement message formatter (theo format file 02) — verified 2026-03-01
-- [ ] Implement scheduled report sender
+- [x] Implement scheduled report sender (đã có sẵn trong scheduler.py — verified 2026-03-01)
 
 ## Phase 6: Verification & Deploy
-- [ ] Unit tests cho từng module
-- [ ] Integration test end-to-end
-- [ ] Docker build & run test
+- [x] Unit tests cho từng module (24/24 passed — 2026-03-01)
+- [x] Integration test end-to-end (passed test_integration.py — 2026-03-01)
+- [x] Docker build & run test (Dockerfile + docker-compose.yml + GitHub Actions CI — 2026-03-01)
 - [ ] Deploy guide cho VPS
