@@ -24,7 +24,7 @@ class AppConfig:
     gemini_api_key: str = ""
 
     # Database
-    database_url: str = "sqlite:///data/finance_forecaster.db"
+    database_url: str = "postgresql://forecaster:1111@localhost:5432/finance_forecaster"
 
     # Telegram
     telegram_bot_token: str = ""
@@ -47,7 +47,7 @@ class AppConfig:
         """Create config from environment variables."""
         config = cls(
             gemini_api_key=os.getenv("GEMINI_API_KEY", ""),
-            database_url=os.getenv("DATABASE_URL", "sqlite:///data/finance_forecaster.db"),
+            database_url=os.getenv("DATABASE_URL", "postgresql://forecaster:1111@localhost:5432/finance_forecaster"),
             telegram_bot_token=os.getenv("TELEGRAM_BOT_TOKEN", ""),
             telegram_chat_id=os.getenv("TELEGRAM_CHAT_ID", ""),
             crawl_interval_hours=int(os.getenv("CRAWL_INTERVAL_HOURS", "2")),

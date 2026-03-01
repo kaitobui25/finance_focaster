@@ -35,8 +35,8 @@ desktop.ini
 docker-data/
 
 # ===== Database =====
-*.db
-*.sqlite3
+# Ignoring local postgresql data mounting dirs if any
+docker-db-data/
 
 # ===== Logs =====
 logs/
