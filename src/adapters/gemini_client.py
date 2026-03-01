@@ -38,21 +38,99 @@ Article content: {content}
 
 Keywords:"""
 
-DIGEST_PROMPT = """You are KAI-FINA, an AI agent specializing in Japanese financial market analysis.
-Create a concise daily news digest from the following articles.
+MORNING_DIGEST_PROMPT = """You are KAI-FINA, an AI agent specializing in Japanese financial market analysis.
+Based on the following news articles, create a MORNING PRE-MARKET BRIEF.
 
-Group the news by theme (e.g., Japan Market, Global Markets, Geopolitics, Central Banks).
-For each group:
-- List the key headlines with 1-line summaries
-- Highlight any connections to the Japanese market
+You MUST output the content in EXACTLY this structure (use these exact emoji and section headers):
 
-At the end, add a brief "Market Implications" section noting the top 3 takeaways
-for investors focused on Japan (stocks, XAU/USD, USD/JPY).
+🌍 QUA ĐÊM (Wall St / Futures)
+• S&P 500: [infer from articles or write [Không có dữ liệu]]
+• Nasdaq: [infer from articles or write [Không có dữ liệu]]
+• Nikkei Futures: [infer from articles or write [Không có dữ liệu]]
+• USD/JPY: [infer from articles or write [Không có dữ liệu]]
+• XAU/USD: [infer from articles or write [Không có dữ liệu]]
+
+📰 TIN QUAN TRỌNG QUA ĐÊM
+• [Top 3-5 important news, each in 1 line — extracted from articles]
+
+🎯 ĐỊNH HƯỚNG HÔM NAY
+Tâm lý thị trường: [Risk-ON / Risk-OFF / Trung lập] — based on your analysis
+Nikkei dự kiến mở cửa: [Tăng/Giảm/Sideway] vì [brief reason]
+
+⚡ CẦN CHÚ Ý HÔM NAY
+• [Important events/data releases today if mentioned in articles]
+
+⚠️ RỦI RO CẦN WATCH
+• [Key risks to monitor]
+
+Rules:
+- Write in Vietnamese (mixed with English for financial terms).
+- If data is not available in the articles, write [Không có dữ liệu].
+- Be concise. Each bullet point should be 1 line max.
+- Do NOT add any header or footer — only the sections above.
 
 Articles:
 {articles_text}
 
-Daily Digest:"""
+Morning Brief:"""
+
+EVENING_DIGEST_PROMPT = """You are KAI-FINA, an AI agent specializing in Japanese financial market analysis.
+Based on the following news articles, create an EVENING END-OF-DAY REPORT.
+
+You MUST output the content in EXACTLY this structure (use these exact emoji and section headers):
+
+📊 KẾT QUẢ PHIÊN
+• Nikkei 225: [infer from articles or write [Không có dữ liệu]]
+• TOPIX: [infer from articles or write [Không có dữ liệu]]
+• USD/JPY: [infer from articles or write [Không có dữ liệu]]
+• XAU/USD: [infer from articles or write [Không có dữ liệu]]
+
+🏆 NGÀNH MẠNH NHẤT HÔM NAY
+1. [Sector A]: [reason] — inferred from articles
+2. [Sector B]: [reason]
+
+📉 NGÀNH YẾU NHẤT HÔM NAY
+1. [Sector X]: [reason]
+
+━━━━━━━━━━━━━━━━━━━━━
+🧠 PHÂN TÍCH SÂU
+
+[Chính sách Vĩ mô]
+→ [Policy news impact from articles]
+
+[Dòng tiền]
+→ [Foreign investor flow if mentioned, otherwise [Không có dữ liệu]]
+
+[Dự phóng Lợi nhuận]
+→ [Earnings-related news if any]
+
+[Chu kỳ kinh tế / Sector Rotation]
+→ [Current cycle assessment based on articles]
+
+━━━━━━━━━━━━━━━━━━━━━
+💡 KHUYẾN NGHỊ HÔM NAY
+
+🟢 MUA / TÍCH LŨY
+• [Asset/Sector/ETF] — [Reason based on which framework] — [Price zone if available]
+
+🟡 THEO DÕI (Chưa vào lệnh)
+• [Asset] — [Condition needed to enter]
+
+🔴 TRÁNH / CẨN THẬN
+• [Asset/Sector] — [Risk reason]
+
+Rules:
+- Write in Vietnamese (mixed with English for financial terms).
+- If data is not available in the articles, write [Không có dữ liệu].
+- Be concise. Each bullet point should be 1 line max.
+- In PHÂN TÍCH SÂU, order the 4 frameworks by priority: Vĩ mô (#1) → Dòng tiền (#2) → Dự phóng Lợi nhuận (#3) → Chu kỳ (#4).
+- In KHUYẾN NGHỊ, always state which framework supports the recommendation.
+- Do NOT add any header or footer — only the sections above.
+
+Articles:
+{articles_text}
+
+Evening Report:"""
 
 
 class GeminiLLMClient(LLMClient):
@@ -87,8 +165,13 @@ class GeminiLLMClient(LLMClient):
 
         return []
 
-    def generate_digest(self, articles_data: list[dict]) -> str:
-        """Generate a daily digest from analyzed articles."""
+    def generate_digest(self, articles_data: list[dict], report_type: str = "evening") -> str:
+        """Generate a daily digest from analyzed articles.
+
+        Args:
+            articles_data: List of article dicts.
+            report_type: "morning" or "evening".
+        """
         articles_text = ""
         for i, article in enumerate(articles_data, 1):
             articles_text += (
@@ -98,7 +181,11 @@ class GeminiLLMClient(LLMClient):
                 f"   Keywords: {', '.join(article.get('keywords', []))}\n"
             )
 
-        prompt = DIGEST_PROMPT.format(articles_text=articles_text)
+        if report_type == "morning":
+            prompt = MORNING_DIGEST_PROMPT.format(articles_text=articles_text)
+        else:
+            prompt = EVENING_DIGEST_PROMPT.format(articles_text=articles_text)
+
         return self._generate(prompt)
 
     def _generate(self, prompt: str) -> str:

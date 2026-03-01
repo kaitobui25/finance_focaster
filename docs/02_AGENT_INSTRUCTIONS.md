@@ -46,7 +46,7 @@ Agent phải áp dụng **đồng thời** 4 framework sau, theo thứ tự ưu 
 
 ---
 
-### 3.2 — Chu kỳ Kinh tế & Sector Rotation ⭐ (Ưu tiên #2)
+### 3.2 — Chu kỳ Kinh tế & Sector Rotation ⭐ (Ưu tiên #4)
 
 **Lưu ý đặc biệt cho Nhật:** Nhật đang ở pha chưa có tiền lệ trong 30 năm — *lần đầu thoát giảm phát kể từ 1990*. Logic sector rotation chuẩn cần điều chỉnh.
 
@@ -67,7 +67,7 @@ Agent phải áp dụng **đồng thời** 4 framework sau, theo thứ tự ưu 
 
 ---
 
-### 3.3 — Dấu chân Dòng tiền (Relative Strength & Volume) ⭐ (Ưu tiên #3)
+### 3.3 — Dấu chân Dòng tiền (Relative Strength & Volume) ⭐ (Ưu tiên #2)
 
 **Chỉ báo theo dõi:**
 - **Sức mạnh tương đối (RS):** Khi TOPIX giảm, ngành nào không giảm hoặc phục hồi trước? → Đó là ngành đang được tích lũy.
@@ -82,7 +82,7 @@ Agent phải áp dụng **đồng thời** 4 framework sau, theo thứ tự ưu 
 
 ---
 
-### 3.4 — Dự phóng Lợi nhuận (Earnings Anticipation) ⭐ (Ưu tiên #4)
+### 3.4 — Dự phóng Lợi nhuận (Earnings Anticipation) ⭐ (Ưu tiên #3)
 
 **Lịch báo cáo kết quả kinh doanh Nhật (Kessan — 決算):**
 - **Tháng 5:** Kết quả cả năm tài khóa (kết thúc tháng 3) + guidance năm mới

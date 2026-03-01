@@ -9,6 +9,7 @@ from __future__ import annotations
 import logging
 
 from src.adapters.gemini_client import GeminiLLMClient
+from src.adapters.message_formatter import ReportFormatter
 from src.adapters.rss_parser import FeedparserRSSParser
 from src.adapters.postgres_repository import PostgresArticleRepository, PostgresReportRepository
 from src.adapters.telegram_sender import ConsoleNotificationSender, TelegramNotificationSender
@@ -40,6 +41,7 @@ class Container:
         self._article_repo = PostgresArticleRepository(self._database)
         self._report_repo = PostgresReportRepository(self._database)
         self._notification_sender = self._create_notification_sender()
+        self._formatter = ReportFormatter()
 
         logger.info("Container initialized successfully")
 
@@ -79,4 +81,5 @@ class Container:
             article_repo=self._article_repo,
             report_repo=self._report_repo,
             notification_sender=self._notification_sender,
+            formatter=self._formatter,
         )

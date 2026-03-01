@@ -68,8 +68,13 @@ class LLMClient(ABC):
         """Extract keywords from a text. Returns list of keywords."""
 
     @abstractmethod
-    def generate_digest(self, articles_data: list[dict]) -> str:
-        """Generate a daily digest from a list of analyzed articles."""
+    def generate_digest(self, articles_data: list[dict], report_type: str = "evening") -> str:
+        """Generate a daily digest from a list of analyzed articles.
+
+        Args:
+            articles_data: List of article dicts with title, source, summary, keywords.
+            report_type: "morning" or "evening" — determines output structure.
+        """
 
 
 class NotificationSender(ABC):

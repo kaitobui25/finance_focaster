@@ -17,7 +17,7 @@
 - [x] Thiết kế PostgreSQL schema (10 bảng, tự phản biện 7→10)
 - [x] Tạo user `forecaster` + database `finance_forecaster`  
 - [x] Chạy `db/init.sql` — 10 bảng, 24 indexes, seed data
-- [/] Viết Python adapters cho PostgreSQL (đang chờ)
+- [x] Viết Python adapters cho PostgreSQL (đang chờ)
 - [ ] Setup Docker (Dockerfile, docker-compose.yml)
 
 ## Phase 3: RSS Crawler Module
@@ -36,8 +36,8 @@
 
 ## Phase 5: Telegram Notification
 - [x] Implement console fallback sender
-- [ ] Setup Telegram Bot
-- [ ] Implement message formatter (theo format file 02)
+- [x] Setup Telegram Bot (@kai_fina_bot — verified 2026-03-01)
+- [x] Implement message formatter (theo format file 02) — verified 2026-03-01
 - [ ] Implement scheduled report sender
 
 ## Phase 6: Verification & Deploy

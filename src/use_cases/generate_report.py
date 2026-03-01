@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timedelta, timezone
 
+from src.adapters.message_formatter import ReportFormatter
 from src.domain.interfaces.repositories import (
     ArticleRepository,
     LLMClient,
@@ -27,11 +28,13 @@ class GenerateReportUseCase:
         article_repo: ArticleRepository,
         report_repo: ReportRepository,
         notification_sender: NotificationSender,
+        formatter: ReportFormatter,
     ) -> None:
         self._llm_client = llm_client
         self._article_repo = article_repo
         self._report_repo = report_repo
         self._notification_sender = notification_sender
+        self._formatter = formatter
 
     def execute(self, report_type: str = "evening") -> bool:
         """Generate and send a report.
@@ -73,12 +76,11 @@ class GenerateReportUseCase:
             for a in processed
         ]
 
-        # Generate digest via LLM
-        digest = self._llm_client.generate_digest(articles_data)
+        # Generate digest via LLM (with report_type for correct prompt)
+        digest = self._llm_client.generate_digest(articles_data, report_type)
 
-        # Build final report
-        header = self._build_header(report_type, now)
-        full_report = f"{header}\n\n{digest}"
+        # Format final report using formatter
+        full_report = self._formatter.format(report_type, now, digest)
 
         # Save to database
         self._report_repo.save(
@@ -98,20 +100,3 @@ class GenerateReportUseCase:
             logger.error("Failed to send %s report", report_type)
 
         return success
-
-    def _build_header(self, report_type: str, now: datetime) -> str:
-        """Build the report header."""
-        date_str = now.strftime("%Y-%m-%d")
-        time_str = now.strftime("%H:%M JST")
-
-        if report_type == "morning":
-            return (
-                f"🌅 KAI-FINA | Pre-Market Brief\n"
-                f"📅 {date_str} | ⏰ {time_str}\n"
-                f"{'━' * 35}"
-            )
-        return (
-            f"🌙 KAI-FINA | End-of-Day Report\n"
-            f"📅 {date_str} | Phiên giao dịch Tokyo đã đóng cửa\n"
-            f"{'━' * 35}"
-        )
