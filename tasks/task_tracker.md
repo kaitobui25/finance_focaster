@@ -44,4 +44,4 @@
 - [x] Unit tests cho từng module (24/24 passed — 2026-03-01)
 - [x] Integration test end-to-end (passed test_integration.py — 2026-03-01)
 - [x] Docker build & run test (Dockerfile + docker-compose.yml + GitHub Actions CI — 2026-03-01)
-- [ ] Deploy guide cho VPS
+- [x] Deploy guide cho VPS (đã tạo docs/04_DEPLOY_GUIDE_VPS.md — 2026-03-01)
