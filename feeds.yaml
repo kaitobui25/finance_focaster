@@ -1,0 +1,23 @@
+# RSS Feed Sources
+# Add/remove feeds here. The crawler will process all feeds listed below.
+# Format:
+#   - name: Human-readable name
+#     url: RSS feed URL
+#     category: Category for grouping (e.g., japan_market, global_business)
+#     language: Feed language (default: en)
+
+feeds:
+  - name: "Japan Times Business"
+    url: "https://rss.app/feeds/F251XyFYRobuYqKb.xml"
+    category: "japan_market"
+    language: "en"
+
+  - name: "Nikkei Asia Economy"
+    url: "https://rss.app/feeds/hUFzGY8EAFXtfqJV.xml"
+    category: "japan_market"
+    language: "en"
+
+  - name: "Reuters Business"
+    url: "https://rss.app/feeds/hSkxGN8OU4HsGDEZ.xml"
+    category: "global_business"
+    language: "en"
