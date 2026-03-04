@@ -1,98 +1,274 @@
-# Hướng dẫn Deploy Finance Forecaster lên VPS (Ubuntu/Debian)
-
-Tài liệu hướng dẫn cách triển khai ứng dụng KAI-FINA lên VPS. Toàn bộ quá trình build image hiện đã được tự động hóa qua GitHub Actions và đẩy lên Docker Hub (`kaitobui/finance_forecaster:latest`).
-
-## Yêu cầu chuẩn bị
-1. **VPS** chạy Ubuntu (20.04/22.04 LTS) hoặc Debian.
-2. VPS đã cài đặt sẵn **Docker** và **Docker Compose**.
-3. Các khóa bí mật: **Telegram Bot Token**, **Chat ID** và **Gemini API Key**.
+# 🚀 QUY TRÌNH CHUẨN DEPLOY VPS + DOCKER + SWAP 2GB
 
 ---
 
-## Bước 1: Khởi tạo VPS & Cài đặt môi trường 
-*(Bỏ qua nếu VPS của bạn đã có sẵn Docker và đủ RAM)*
+# PHẦN 1 — Chuẩn bị VPS
 
-SSH vào VPS của bạn và chạy đoạn mã thiết lập (Cài Docker + Tạo 2GB Swap RAM để chống sập máy):
+## 1️⃣ SSH vào VPS
+
 ```bash
-sudo apt update && sudo apt install docker.io docker-compose git curl wget -y
-sudo systemctl enable docker && sudo systemctl start docker
+ssh ubuntu@your_server_ip
+```
+
+Tham khảo /08_VPS.md
+
+Kiểm tra RAM:
+
+```bash
+free -h
+```
+
+Nếu RAM ~1GB → nên tạo swap.
+
+---
+
+# PHẦN 2 — Cài Docker chuẩn (không dùng docker.io)
+
+Theo hướng dẫn chính thức từ Docker.
+
+## 2️⃣ Gỡ bản Docker cũ (nếu từng cài)
+
+```bash
+sudo apt remove docker docker-engine docker.io containerd runc -y
+```
+
+---
+
+## 3️⃣ Cài Docker Engine + Compose v2
+
+```bash
+sudo apt update
+sudo apt install ca-certificates curl gnupg -y
+
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+  https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo $VERSION_CODENAME) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update
+
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+```
+
+Enable Docker:
+
+```bash
+sudo systemctl enable docker
+sudo systemctl start docker
+```
+
+Cho phép user dùng docker không cần sudo:
+
+```bash
 sudo usermod -aG docker $USER
+```
+
+➡ Sau đó logout SSH và login lại.
+
+---
+
+## 4️⃣ Kiểm tra phiên bản
+
+```bash
+docker --version
+docker compose version
+```
+
+Phải thấy:
+
+- Docker 25+ hoặc 26+
+- Docker Compose v2.x
+
+---
+
+# PHẦN 3 — Tạo Swap 2GB (quan trọng cho VPS 1GB RAM)
+
+## 5️⃣ Tạo swap file
+
+```bash
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
+```
+
+Kiểm tra:
+
+```bash
+swapon --show
+free -h
+```
+
+Phải thấy:
+
+```
+Swap: 2.0G
+```
+
+## 6️⃣ Tự động bật swap khi reboot
+
+```bash
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
-Tạo thư mục làm việc tĩnh:
+//bỏ qua Phần 4 nếu kéo image từ docker hub về vps.
+//Trong docker-compose.yml có dạng:
+
 ```bash
-mkdir -p ~/finance_forecaster
-cd ~/finance_forecaster
+services:
+  app:
+    image: username/finance-forecaster:latest
+```
+
+# PHẦN 4 — Chuẩn bị Project (not use now)
+
+## 7️⃣ Cài Git
+
+```bash
+sudo apt install git -y
+```
+
+## 8️⃣ Clone project
+
+```bash
+git clone https://github.com/your_repo.git
+cd your_repo
+```
+
+Hoặc nếu bạn chỉ dùng compose file riêng:
+
+```bash
+mkdir -p ~/finance_focaster
+cd ~/finance_focaster
 ```
 
 ---
 
-## Bước 2: Tải Cấu hình Khởi chạy
-Để deploy, bạn **không cần rồi toàn bộ source code**. Chỉ cần ba cấu hình cốt lõi: File Compose, Script DB, và biến môi trường.
+# PHẦN 5 — Cấu hình .env
 
-**1. Tải `docker-compose.yml` và `init.sql`**
-```bash
-mkdir -p docker db
-wget -O docker/docker-compose.yml https://raw.githubusercontent.com/kaitobui25/finance_focaster/main/docker/docker-compose.yml
-wget -O db/init.sql https://raw.githubusercontent.com/kaitobui25/finance_focaster/main/db/init.sql
-```
-
-**2. Khởi tạo file biến môi trường (`.env`)**
 ```bash
 nano .env
 ```
-📋 Dán nội dung sau vào (nhớ thay các giá trị `xxxxxxxx` bằng key thực tế của bạn):
+
+Ví dụ:
+Thay xxxx bằng key của bạn.
+
 ```env
 POSTGRES_PASSWORD=StrongPassword123!
 
-GEMINI_API_KEY=xxxxxxxxxxxxxxxx
-TELEGRAM_BOT_TOKEN=xxxxxxxxxxxxxxxx
-TELEGRAM_CHAT_ID=xxxxxxxx
+GEMINI_API_KEY=xxxx
+TELEGRAM_BOT_TOKEN=xxxx
+TELEGRAM_CHAT_ID=xxxx
 
 CRAWL_INTERVAL_HOURS=2
-MORNING_REPORT_TIME=07:45
-EVENING_REPORT_TIME=16:30
 TIMEZONE=Asia/Tokyo
 LOG_LEVEL=INFO
-
 ```
-*(Lưu file: `Ctrl+O` -> `Enter`, Thoát: `Ctrl+X`)*
+
+Lưu file.
 
 ---
 
-## Bước 3: Khởi chạy Ứng dụng
-Hệ thống sẽ tự động tải image mới nhất từ Docker Hub về và cấu hình database.
+# PHẦN 6 — Deploy lần đầu
+
+## 9️⃣ Nếu dùng image từ Docker Hub
 
 ```bash
-docker-compose -f docker/docker-compose.yml up -d
-```
-
-**Kiểm tra trạng thái:**
-- Xem danh sách container đang chạy:
-```bash
-  docker-compose -f docker/docker-compose.yml ps
-```
-- Xem log hoạt động để chắc chắn mọi thứ ổn:
- ```bash
-  docker-compose -f docker/docker-compose.yml logs -f app
+docker compose pull
+docker compose up -d
 ```
 
 ---
 
-## Cách Update Ứng dụng (Sau này)
-Bạn thiết lập CI/CD trên Github, nên mỗi khi push lên nhánh `main`, hệ thống tự build Docker Image mới. Khi muốn cập nhật code mới lên Server, bạn chỉ cần chạy:
+## 🔟 Nếu build local (có Dockerfile) (not use now)
 
 ```bash
-cd ~/finance_forecaster
-# Tải image phiên bản mới nhất từ Docker Hub
-docker-compose -f docker/docker-compose.yml pull app
-# Khởi động lại ứng dụng
-docker-compose -f docker/docker-compose.yml up -d app
+docker compose build --no-cache
+docker compose up -d
 ```
 
-*(Lưu ý: Dữ liệu CSDL hoàn toàn an toàn do đã được ánh xạ vào volume độc lập `pgdata` của Docker).*
+---
+
+# PHẦN 7 — Kiểm tra hệ thống
+
+Xem container:
+
+```bash
+docker compose ps
+```
+
+Xem log:
+
+```bash
+docker compose logs -f app
+```
+
+Xem RAM:
+
+```bash
+free -h
+```
+
+Xem container dùng bao nhiêu RAM:
+
+```bash
+docker stats
+```
+
+---
+
+# PHẦN 8 — Quy trình update sau này
+
+## Khi bạn sửa code và push lên GitHub
+
+SSH vào VPS:
+
+```bash
+cd your_repo
+git pull
+```
+
+### Nếu build local: (not use now)
+
+```bash
+docker compose down
+docker compose build
+docker compose up -d
+```
+
+### Nếu dùng image từ Docker Hub:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+---
+
+# PHẦN 9 — Khi container lỗi
+
+Xem log:
+
+```bash
+docker compose logs app
+```
+
+Restart:
+
+```bash
+docker compose restart
+```
+
+Reset toàn bộ:
+
+```bash
+docker compose down -v
+docker compose up -d
+```
+
+---
