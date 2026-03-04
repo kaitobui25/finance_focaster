@@ -50,3 +50,6 @@ htmlcov/
 # ===== Misc =====
 *.bak
 *.tmp
+
+# ===== Report =====
+latest_report.md

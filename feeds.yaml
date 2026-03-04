@@ -7,17 +7,17 @@
 #     language: Feed language (default: en)
 
 feeds:
-  - name: "Japan Times Business"
-    url: "https://rss.app/feeds/F251XyFYRobuYqKb.xml"
-    category: "japan_market"
-    language: "en"
+    - name: "Japan Times Business"
+      url: "https://news.google.com/rss/search?q=www.japantimes.co.jp/business&hl=en-US&gl=US&ceid=US:en"
+      category: "japan_market"
+      language: "en"
 
-  - name: "Nikkei Asia Economy"
-    url: "https://rss.app/feeds/hUFzGY8EAFXtfqJV.xml"
-    category: "japan_market"
-    language: "en"
+    - name: "Nikkei Asia Economy"
+      url: "https://news.google.com/rss/search?q=asia.nikkei.com/economy/east-asia/japan&hl=en-US&gl=US&ceid=US:en"
+      category: "japan_market"
+      language: "en"
 
-  - name: "Reuters Business"
-    url: "https://rss.app/feeds/hSkxGN8OU4HsGDEZ.xml"
-    category: "global_business"
-    language: "en"
+    - name: "Reuters Business"
+      url: "https://news.google.com/rss/search?q=site:reuters.com/business&hl=en-US&gl=US&ceid=US:en"
+      category: "global_business"
+      language: "en"
