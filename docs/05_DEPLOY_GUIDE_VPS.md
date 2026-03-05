@@ -196,6 +196,12 @@ docker compose up -d
 
 # PHẦN 7 — Kiểm tra hệ thống
 
+Đi vào thư mục project:
+
+```bash
+cd ~/finance_focaster
+```
+
 Xem container:
 
 ```bash
