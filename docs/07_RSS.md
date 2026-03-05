@@ -2,7 +2,7 @@ Tuy Google đã gỡ bỏ giao diện hiển thị, nhưng "cổng kết nối n
 
 Dưới đây là cách "giải phẫu" công thức đó để bạn có thể tự tạo RSS cho bất kỳ trang web hoặc chủ đề nào mình muốn:
 
-### Công thức bí mật tạo RSS từ Google News
+# Công thức bí mật tạo RSS từ Google News
 
 Đường link RSS luôn được ghép lại từ 3 thành phần chính:
 
@@ -34,5 +34,3 @@ Bạn có thể tận dụng công thức này để gom tin tức cực kỳ hi
 **Ví dụ:** Nếu bạn muốn tạo một luồng RSS chỉ tập trung vào tin tức về "Trí tuệ nhân tạo" từ các báo **Việt Nam**, bạn chỉ cần thay từ khóa (nhớ thay khoảng trắng bằng dấu `+`) và đổi đuôi ngôn ngữ thành của Việt Nam (`&hl=vi&gl=VN&ceid=VN:vi`):
 
 > `https://news.google.com/rss/search?q=Trí+tuệ+nhân+tạo&hl=vi&gl=VN&ceid=VN:vi`
-
-Bạn có đang muốn theo dõi thêm một trang tin tức khó nhằn nào khác hay một chủ đề cụ thể nào không? Hãy nói tên trang đó, tôi sẽ ghép sẵn đường link RSS chuẩn xác giúp bạn nhé!
